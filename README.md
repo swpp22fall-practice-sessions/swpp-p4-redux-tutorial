@@ -5,8 +5,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 npx create-react-app swpp-p3-react-tutorial --template typescript
 ```
 
-## SWPP Practice Session 3
-This time we will study basic frontend
+## SWPP Practice Session 4
+This time we will study react redux for state, and axios for http request.
 
 ## Available Scripts
 
