@@ -28,8 +28,20 @@ export const todoSlice = createSlice({
   reducers: {
     getAll: (state, action: PayloadAction<{ todos: TodoType[] }>) => {},
     getTodo: (state, action: PayloadAction<{ targetId: number }>) => {},
-    toggleDone: (state, action: PayloadAction<{ targetId: number }>) => {},
-    deleteTodo: (state, action: PayloadAction<{ targetId: number }>) => {},
+    toggleDone: (state, action: PayloadAction<{ targetId: number }>) => {
+      const todo = state.todos.find(
+        (value) => value.id === action.payload.targetId
+      );
+      if (todo) {
+        todo.done = !todo.done;
+      }
+    },
+    deleteTodo: (state, action: PayloadAction<{ targetId: number }>) => {
+      const deleted = state.todos.filter((todo) => {
+        return todo.id !== action.payload.targetId;
+      });
+      state.todos = deleted;
+    },
     addTodo: (
       state,
       action: PayloadAction<{ title: string; content: string }>
