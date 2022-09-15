@@ -2,7 +2,7 @@
   "name": "swpp-p3-react-tutorial",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8000",
+  "proxy": "http://127.0.0.1:8000",
   "dependencies": {
     "@reduxjs/toolkit": "1.8.5",
     "@testing-library/jest-dom": "5.16.5",
@@ -12,6 +12,7 @@
     "@types/node": "16.11.56",
     "@types/react": "18.0.17",
     "@types/react-dom": "18.0.6",
+    "axios": "0.27.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "8.0.2",
