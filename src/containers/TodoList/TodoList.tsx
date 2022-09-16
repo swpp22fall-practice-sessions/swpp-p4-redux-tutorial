@@ -41,6 +41,7 @@ export default function TodoList(props: IProps) {
         {todos.map((td) => {
           return (
             <Todo
+              key={`${td.id}_todo`}
               title={td.title}
               done={td.done}
               clicked={() => clickTodoHandler(td)}
