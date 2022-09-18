@@ -24,6 +24,14 @@ export const fetchTodos = createAsyncThunk("todo/fetchTodos", async () => {
   return response.data;
 });
 
+export const postTodo = createAsyncThunk(
+  "todo/postTodo",
+  async (td: Pick<TodoType, "title" | "content">, { dispatch }) => {
+    const response = await axios.post("/api/todo/", td);
+    dispatch(todoActions.addTodo(response.data));
+  }
+);
+
 export const todoSlice = createSlice({
   name: "todo",
   initialState,
@@ -67,6 +75,9 @@ export const todoSlice = createSlice({
     builder.addCase(fetchTodos.fulfilled, (state, action) => {
       // Add user to the state array
       state.todos = action.payload;
+    });
+    builder.addCase(postTodo.rejected, (_state, action) => {
+      console.error(action.error);
     });
   },
 });
