@@ -1,12 +1,13 @@
 import { render } from "@testing-library/react";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
-import { selectTodo, todoActions } from "../../store/slices/todo";
+import { fetchTodos, selectTodo, todoActions } from "../../store/slices/todo";
 import { TodoType } from "../../store/slices/todo";
+import { AppDispatch } from "../../store";
 
 import "./TodoList.css";
 
@@ -27,7 +28,11 @@ const TodoList = (props: IProps) => {
         navigate(`/todos/${todo.id}`);
     };
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
+
+    useEffect(() => {
+        dispatch(fetchTodos())
+    }, [])
 
     return (
         <div className="TodoList">

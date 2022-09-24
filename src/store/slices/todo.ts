@@ -1,15 +1,12 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 import { RootState } from "..";
 
 export interface TodoType { id: number; title: string; content: string; done: boolean;};
 export interface TodoState { todos: TodoType[]; selectedTodo: TodoType | null; }
 
 const initialState: TodoState = {
-    todos: [
-        { id: 1, title: "SWPP", content: "take swpp class", done: true },
-        { id: 2, title: "Movie", content: "watch movie", done: false },
-        { id: 3, title: "Dinner", content: "eat dinner", done: false },
-    ],
+    todos: [],
     selectedTodo: null,
 };
 
@@ -46,10 +43,23 @@ export const todoSlice = createSlice({
             state.todos.push(newTodo);
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(fetchTodos.fulfilled, (state, action) => {
+            state.todos = action.payload;
+        })
+    }
 });
 
 export const todoActions = todoSlice.actions;
 export const selectTodo = (state: RootState) => state.todo;
 
-export default todoSlice.reducer;
+export const fetchTodos = createAsyncThunk(
+    "todos/fetchTodos",
+    async () => {
+        const response = await axios.get<TodoType[]>("/api/todo/");
 
+        return response.data;
+    }
+);
+
+export default todoSlice.reducer;
