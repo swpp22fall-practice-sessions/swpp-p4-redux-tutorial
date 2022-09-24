@@ -19,9 +19,25 @@ export const todoSlice = createSlice({
     reducers: {
         getAll: (state, action: PayloadAction<{ todos: TodoType[]; }>) => {},
         getTodo: (state, action: PayloadAction<{ targetId: Number; }>) => {},
-        toggleDone: (state, action: PayloadAction<{ targetId: Number; }>) => {},
-        deleteTodo: (state, action: PayloadAction<{ targetId: Number; }>) => {},
-        addTodo: (state, action: PayloadAction<{ title: string; content: string; }>) => {},
+        toggleDone: (state, action: PayloadAction<{ targetId: Number; }>) => {
+            const todo = state.todos.find((td) => td.id === action.payload.targetId);
+            if (todo) {
+                todo.done = !todo.done;
+            }
+        },
+        deleteTodo: (state, action: PayloadAction<{ targetId: Number; }>) => {
+            state.todos = state.todos.filter((td) => td.id !== action.payload.targetId);
+        },
+        addTodo: (state, action: PayloadAction<{ title: string; content: string; }>) => {
+            const newTodo = {
+                id: state.todos.length + 1, // temporary
+                title: action.payload.title,
+                content: action.payload.content,
+                done: false,
+            };
+
+            state.todos.push(newTodo);
+        },
     },
 });
 
