@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
-import { fetchTodos, selectTodo, todoActions } from "../../store/slices/todo";
+import { fetchTodos, selectTodo, deleteTodo, toggleDone, todoActions } from "../../store/slices/todo";
 import { TodoType } from "../../store/slices/todo";
 import { AppDispatch } from "../../store";
 
@@ -38,14 +38,14 @@ const TodoList = (props: IProps) => {
         <div className="TodoList">
             <div className="title">{title}</div>
             <div className="todos">
-                {todoState.todos.map((td) => {
+                {todoState.todos.map((td: TodoType) => {
                     return (<Todo 
                         key={td.id} 
                         title={td.title} 
                         done={td.done} 
                         clickDetail={() => clickTodoHandler(td)} 
-                        clickDone={() => dispatch(todoActions.toggleDone({ targetId: td.id }))} 
-                        clickDelete={() => dispatch(todoActions.deleteTodo({ targetId: td.id }))}/>);
+                        clickDone={() => dispatch(toggleDone(td.id))} 
+                        clickDelete={() => dispatch(deleteTodo(td.id))}/>);
                 })}
                 <NavLink to="/new-todo">New Todo</NavLink>
 

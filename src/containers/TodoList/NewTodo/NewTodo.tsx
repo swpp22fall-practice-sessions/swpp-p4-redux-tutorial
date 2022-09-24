@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { todoActions } from "../../../store/slices/todo";
+import { todoActions, postTodo } from "../../../store/slices/todo";
+import { AppDispatch } from "../../../store";
 
 import "./NewTodo.css";
 
@@ -10,15 +11,19 @@ const NewTodo = () => {
     const [content, setContent] = useState<string>("");
     const [submitted, setSubmitted] = useState<boolean>(false);
 
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
-    const postTodoHandler = () => {
+    const postTodoHandler = async () => {
         const data = { title: title, content: content };
 
-        dispatch(todoActions.addTodo(data));
+        const result = await dispatch(postTodo(data));
 
-        alert("Submitted\n" + data.title + "\n" + data.content);
-        setSubmitted(true);
+        if (result.payload) {
+            alert("Submitted\n" + data.title + "\n" + data.content);
+            setSubmitted(true);
+        } else {
+            alert("Error: " + "postTodoHandler");
+        }
     };
 
     return submitted ? <Navigate to="/todos" /> : (

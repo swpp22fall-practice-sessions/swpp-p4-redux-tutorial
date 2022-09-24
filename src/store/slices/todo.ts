@@ -46,7 +46,13 @@ export const todoSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchTodos.fulfilled, (state, action) => {
             state.todos = action.payload;
-        })
+        });
+        builder.addCase(postTodo.rejected, (_state, action) =>{
+            console.error(action.error);
+        });
+        builder.addCase(fetchTodo.fulfilled, (state, action) => {
+            state.selectedTodo = action.payload;
+        });
     }
 });
 
@@ -59,6 +65,38 @@ export const fetchTodos = createAsyncThunk(
         const response = await axios.get<TodoType[]>("/api/todo/");
 
         return response.data;
+    }
+);
+
+export const postTodo = createAsyncThunk(
+    "todo/postTodo",
+    async (td: Pick<TodoType, "title" | "content">, { dispatch }) => {
+        const response = await axios.post("/api/todo/", td);
+        dispatch(todoActions.addTodo(response.data));
+    }
+);
+
+export const deleteTodo = createAsyncThunk(
+    "todo/deleteTodo",
+    async (id: TodoType["id"], { dispatch }) => {
+        await axios.delete(`/api/todo/${id}/`);
+        dispatch(todoActions.deleteTodo({ targetId: id }));
+    }
+);
+
+export const toggleDone = createAsyncThunk(
+    "todo/toggleDone",
+    async (id: TodoType["id"], { dispatch }) => {
+        await axios.put(`/api/todo/${id}/`);
+        dispatch(todoActions.toggleDone({ targetId: id }));
+    }
+);
+
+export const fetchTodo = createAsyncThunk( 
+    "todo/fetchTodo",
+    async (id: TodoType["id"], { dispatch }) => {
+        const response = await axios.get(`/api/todo/${id}/`);
+        return response.data ?? null;
     }
 );
 
