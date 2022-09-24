@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { useState, useMemo } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
 import Todo from "../../components/Todo/Todo";
@@ -19,15 +19,13 @@ const TodoList = (props: IProps) => {
     const todoState = useSelector(selectTodo);
 
     const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
-    const clickTodoHandler = (todo: TodoType) => {
-         setSelectedTodo(selectedTodo === todo ? null : todo)
-    };
 
-    const todoDetail = useMemo(() => {
-        return selectedTodo ? (
-            <TodoDetail title={selectedTodo.title} content={selectedTodo.content} />
-        ) : null;
-    }, [selectedTodo]);
+    const navigate = useNavigate();
+
+    const clickTodoHandler = (todo: TodoType) => {
+        setSelectedTodo(selectedTodo === todo ? null : todo);
+        navigate(`/todos/${todo.id}`);
+    };
 
     const dispatch = useDispatch();
 
@@ -44,9 +42,6 @@ const TodoList = (props: IProps) => {
                         clickDone={() => dispatch(todoActions.toggleDone({ targetId: td.id }))} 
                         clickDelete={() => dispatch(todoActions.deleteTodo({ targetId: td.id }))}/>);
                 })}
-
-                {todoDetail}
-
                 <NavLink to="/new-todo">New Todo</NavLink>
 
             </div>
