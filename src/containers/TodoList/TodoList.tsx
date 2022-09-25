@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import Todo from "../../components/Todo/Todo";
-import { selectTodo, todoActions } from "../../store/slices/todo";
+import { fetchTodos, selectTodo, todoActions } from "../../store/slices/todo";
 import "./TodoList.css";
+import { AppDispatch } from "../../store";
 
 interface IProps {
   title: string;
@@ -17,15 +17,12 @@ export default function TodoList(props: IProps) {
   const { title } = props;
 
   const todoState = useSelector(selectTodo);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    axios.get("/api/todo/").then((result) => console.log(result));
-    axios
-      .get("/api/todoerror")
-      .then((result) => console.log(result))
-      .catch((err) => console.log(err));
-  });
+    dispatch(fetchTodos())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
 
   const clickTodoHandler = (td: TodoType) => {
     navigate("/todos/" + td.id);
