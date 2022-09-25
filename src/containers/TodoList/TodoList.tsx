@@ -2,7 +2,12 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import Todo from "../../components/Todo/Todo";
-import { fetchTodos, selectTodo, todoActions } from "../../store/slices/todo";
+import {
+  fetchTodos,
+  selectTodo,
+  toggleDone,
+  deleteTodo,
+} from "../../store/slices/todo";
 import "./TodoList.css";
 import { AppDispatch } from "../../store";
 
@@ -20,9 +25,9 @@ export default function TodoList(props: IProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    dispatch(fetchTodos())
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+    dispatch(fetchTodos());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const clickTodoHandler = (td: TodoType) => {
     navigate("/todos/" + td.id);
@@ -39,12 +44,8 @@ export default function TodoList(props: IProps) {
               title={td.title}
               done={td.done}
               clickDetail={() => clickTodoHandler(td)}
-              clickDone={() =>
-                dispatch(todoActions.toggleDone({ targetId: td.id }))
-              }
-              clickDelete={() =>
-                dispatch(todoActions.deleteTodo({ targetId: td.id }))
-              }
+              clickDone={() => dispatch(toggleDone(td.id))}
+              clickDelete={() => dispatch(deleteTodo(td.id))}
             />
           );
         })}
