@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
-import { selectTodo } from "../../store/slices/todo";
+import { selectTodo, todoActions } from "../../store/slices/todo";
 import "./TodoList.css";
 
 interface IProps {
@@ -17,6 +17,7 @@ export default function TodoList(props: IProps) {
   const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
 
   const todoState = useSelector(selectTodo);
+  const dispatch = useDispatch();
 
   const clickTodoHandler = (td: TodoType) => {
     if (selectedTodo === td) {
@@ -42,7 +43,9 @@ export default function TodoList(props: IProps) {
               key={`${td.id}_todo`}
               title={td.title}
               done={td.done}
-              clicked={() => clickTodoHandler(td)}
+              clickDetail={() => clickTodoHandler(td)}
+              clickDone={() => dispatch(todoActions.toggleDone({targetId: td.id}))}
+              clickDelete={() => dispatch(todoActions.deleteTodo({targetId: td.id}))}
             />
           );
         })}
