@@ -3,8 +3,6 @@ import TodoList from "./containers/TodoList/TodoList"; // can omit.js
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import NewTodo from "./containers/TodoList/NewTodo/NewTodo";
 import TodoDetail from "./components/TodoDetail/TodoDetail";
-import { Provider } from "react-redux";
-import { store } from "./store";
 
 function App() {
   return (
@@ -18,18 +16,10 @@ function App() {
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </BrowserRouter>
-
     </div>
   );
 }
 
-
-
 export default App;
 
 <div className="TodoList"></div>;
-/* actually, it uses className, not class to avoid collision btw JS class
- * this syntax is compiled to React.createElement(‘div’, {className: ‘TodoList’})
- * by React Transpiler.
- * );
- */
