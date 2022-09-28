@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import NewTodo from "./containers/TodoList/NewTodo/NewTodo";
 import TodoDetail from "./components/TodoDetail/TodoDetail";
 
+
 function App() {
   return (
     <div className="App">
