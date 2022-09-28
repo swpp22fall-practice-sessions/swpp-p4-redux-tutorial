@@ -76,4 +76,12 @@ export const fetchTodos = createAsyncThunk("todo/fetchTodos", async () => {
   return response.data;
 });
 
+export const postTodo = createAsyncThunk(
+  "todo/postTodo",
+  async (td: Pick<TodoType, "title" | "content">, { dispatch }) => {
+    const response = await axios.post("/api/todo/", td);
+    dispatch(todoActions.addTodo(response.data));
+  }
+);
+
 export default todoSlice.reducer;
