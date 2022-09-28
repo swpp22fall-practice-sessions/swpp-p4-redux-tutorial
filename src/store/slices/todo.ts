@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 import { RootState } from "..";
 
 export interface TodoType {
@@ -60,7 +61,19 @@ export const todoSlice = createSlice({
       state.todos.push(newTodo);
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchTodos.fulfilled, (state, action) => {
+      state.todos = action.payload;
+    });
+  },
 });
+
 export const todoActions = todoSlice.actions;
 export const selectTodo = (state: RootState) => state.todo;
+
+export const fetchTodos = createAsyncThunk("todo/fetchTodos", async () => {
+  const response = await axios.get<TodoType[]>("/api/todo/");
+  return response.data;
+});
+
 export default todoSlice.reducer;
