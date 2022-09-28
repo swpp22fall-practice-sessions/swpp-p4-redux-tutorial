@@ -1,8 +1,12 @@
-import { useMemo, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useMemo, useState, useEffect } from "react";
+import { NavLink, useNavigate, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTodos, selectTodo, toggleDone, deleteTodo } from "../../store/slices/todo"
+import axios from 'axios';
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
 import "./TodoList.css";
+import { AppDispatch } from '../../store/index';
 
 interface IProps {
   title: string;
@@ -14,18 +18,21 @@ export default function TodoList(props: IProps) {
   const { title } = props;
   const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
 
-  const [todos, setTodos] = useState<TodoType[]>([
-    { id: 1, title: "SWPP", content: "take swpp class", done: true },
-    { id: 2, title: "Movie", content: "watch movie", done: false },
-    { id: 3, title: "Dinner", content: "eat dinner", done: false },
-  ]);
+  const todoState = useSelector(selectTodo);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(fetchTodos());}, []
+  );
 
   const clickTodoHandler = (td: TodoType) => {
-    if (selectedTodo === td) {
-      setSelectedTodo(null);
-    } else {
-      setSelectedTodo(td);
-    }
+    // if (selectedTodo === td) {
+    //   setSelectedTodo(null);
+    // } else {
+    //   setSelectedTodo(td);
+    // }
+    navigate('/todos/' + td.id);
   };
 
   const todoDetail = useMemo(() => {
@@ -33,18 +40,19 @@ export default function TodoList(props: IProps) {
       <TodoDetail title={selectedTodo.title} content={selectedTodo.content} />
     ) : null;
   }, [selectedTodo]);
-
+   
   return (
     <div className="TodoList">
       <div className="title">{title}</div>
       <div className="todos">
-        {todos.map((td) => {
+        {todoState.todos.map((td) => {
           return (
             <Todo
-              key={`${td.id}_todo`}
               title={td.title}
               done={td.done}
-              clicked={() => clickTodoHandler(td)}
+              clickDetail={() => clickTodoHandler(td)}
+              clickDone={() => dispatch(toggleDone(td.id))}
+              clickDelete={() => dispatch(deleteTodo(td.id))}
             />
           );
         })}
