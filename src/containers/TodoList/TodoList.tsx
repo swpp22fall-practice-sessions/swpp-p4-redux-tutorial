@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { NavLink , useNavigate} from "react-router-dom";
 import Todo from "../../components/Todo/Todo";
-import TodoDetail from "../../components/TodoDetail/TodoDetail";
 import "./TodoList.css";
 import { useDispatch, useSelector } from 'react-redux';
 import { selectTodo, todoActions, fetchTodos, deleteTodo, toggleDone } from "../../store/slices/todo";
