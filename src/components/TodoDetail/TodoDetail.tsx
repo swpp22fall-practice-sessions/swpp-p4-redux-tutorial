@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import "./TodoDetail.css";
 import { AppDispatch } from "../../store";
-import { selectTodo, todoActions } from "../../store/slices/todo";
+import { fetchTodo, selectTodo } from "../../store/slices/todo";
 
 const TodoDetail = () => {
   const { id } = useParams();
@@ -11,8 +11,9 @@ const TodoDetail = () => {
   const todoState = useSelector(selectTodo);
 
   useEffect(() => {
-    dispatch(todoActions.getTodo({ targetId: Number(id) }));
-  }, [dispatch, id]);
+    dispatch(fetchTodo(Number(id)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <div className="TodoDetail">

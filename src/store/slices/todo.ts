@@ -68,6 +68,9 @@ export const todoSlice = createSlice({
     builder.addCase(postTodo.rejected, (_state, action) => {
       console.error(action.error);
     });
+    builder.addCase(fetchTodo.fulfilled, (state, action) => {
+      state.selectedTodo = action.payload;
+    });
   },
 });
 
@@ -100,6 +103,14 @@ export const toggleDone = createAsyncThunk(
   async (id: TodoType["id"], { dispatch }) => {
     await axios.put(`/api/todo/${id}/`);
     dispatch(todoActions.toggleDone({ targetId: id }));
+  }
+);
+
+export const fetchTodo = createAsyncThunk(
+  "todo/fetchTodo",
+  async (id: TodoType["id"], { dispatch }) => {
+    const response = await axios.get(`/api/todo/${id}/`);
+    return response.data ?? null;
   }
 );
 
