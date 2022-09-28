@@ -1,9 +1,4 @@
-const { configureStore } = require('@reduxjs/toolkit');  // load module in Node.js
-const initialState = { number: 0 }; // default state
-// create identity reducer
-const reducer = (state = initialState, action) => {
-  return state;
-}
-// create redux store # run
-const store = configureStore({ reducer: reducer });
-console.log(store.getState());
+ 
+const axios = require('axios');
+axios.get('http://127.0.0.1:8000/api/todos')
+.then(response => console.log(response)) .catch(error => console.log(error));

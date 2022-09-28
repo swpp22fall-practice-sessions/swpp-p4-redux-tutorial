@@ -1,7 +1,11 @@
-import { useMemo, useState } from "react";
+import axios from "axios";
+import { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
+import { AppDispatch } from "../../store";
+import { deleteTodo, fetchTodos, selectTodo, todoActions, toggleDone } from "../../store/slices/todo";
 import "./TodoList.css";
 
 interface IProps {
@@ -11,14 +15,14 @@ interface IProps {
 type TodoType = { id: number; title: string; content: string; done: boolean };
 
 export default function TodoList(props: IProps) {
+  const dispatch = useDispatch<AppDispatch>();
+    useEffect(() => {
+      dispatch(fetchTodos())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+  const todoState = useSelector(selectTodo);
   const { title } = props;
   const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
-
-  const [todos, setTodos] = useState<TodoType[]>([
-    { id: 1, title: "SWPP", content: "take swpp class", done: true },
-    { id: 2, title: "Movie", content: "watch movie", done: false },
-    { id: 3, title: "Dinner", content: "eat dinner", done: false },
-  ]);
 
   const clickTodoHandler = (td: TodoType) => {
     if (selectedTodo === td) {
@@ -38,14 +42,15 @@ export default function TodoList(props: IProps) {
     <div className="TodoList">
       <div className="title">{title}</div>
       <div className="todos">
-        {todos.map((td) => {
+        {todoState.todos.map((td) => {
           return (
             <Todo
-              key={`${td.id}_todo`}
               title={td.title}
               done={td.done}
-              clicked={() => clickTodoHandler(td)}
-            />
+              clickDetail={() => clickTodoHandler(td)}
+              clickDone={() => dispatch(toggleDone(td.id))}
+              clickDelete={() => dispatch(deleteTodo(td.id))}
+          />
           );
         })}
         {todoDetail}
