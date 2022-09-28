@@ -1,8 +1,12 @@
-import { useMemo, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTodos, selectTodo, todoActions, deleteTodo, toggleDone} from "../../store/slices/todo";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
 import "./TodoList.css";
+import axios from "axios";
+import { AppDispatch } from "../../store";
 
 interface IProps {
   title: string;
@@ -20,31 +24,40 @@ export default function TodoList(props: IProps) {
     { id: 3, title: "Dinner", content: "eat dinner", done: false },
   ]);
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchTodos())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const clickTodoHandler = (td: TodoType) => {
-    if (selectedTodo === td) {
-      setSelectedTodo(null);
-    } else {
-      setSelectedTodo(td);
-    }
+    navigate('/todos/' + td.id)
   };
 
   const todoDetail = useMemo(() => {
     return selectedTodo ? (
-      <TodoDetail title={selectedTodo.title} content={selectedTodo.content} />
+      <TodoDetail />
     ) : null;
   }, [selectedTodo]);
+
+  const todoState = useSelector(selectTodo);
+  
 
   return (
     <div className="TodoList">
       <div className="title">{title}</div>
       <div className="todos">
-        {todos.map((td) => {
+        {todoState.todos.map((td) => {
           return (
             <Todo
               key={`${td.id}_todo`}
               title={td.title}
               done={td.done}
-              clicked={() => clickTodoHandler(td)}
+              clickDetail = {() => clickTodoHandler(td)}
+              clickDone={() => dispatch(toggleDone(td.id))}
+              clickDelete={() => dispatch(deleteTodo(td.id))}
             />
           );
         })}
