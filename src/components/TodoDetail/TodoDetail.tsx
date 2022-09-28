@@ -3,21 +3,17 @@ import "./TodoDetail.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { selectTodo, todoActions } from "../../store/slices/todo";
+import { fetchTodo, selectTodo, todoActions } from "../../store/slices/todo";
+import { AppDispatch } from "../../store";
 
-type Props = {
-  title: string;
-  content: string;
-};
+const TodoDetail = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch<AppDispatch>();
+  const todoState = useSelector(selectTodo);
+  useEffect(() => {
+    dispatch(fetchTodo(Number(id)));
+  }, [id]);
 
-const { id } = useParams();
-const dispatch = useDispatch();
-const todoState = useSelector(selectTodo);
-useEffect(() => {
-  dispatch(todoActions.getTodo({ targetId: Number(id) }));
-}, [dispatch, id]);
-
-const TodoDetail = (props: Props) => {
   return (
     <div className="TodoDetail">
       <div className="row">
