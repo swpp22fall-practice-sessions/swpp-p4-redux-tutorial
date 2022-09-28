@@ -1,9 +1,9 @@
-const { configureStore } = require('@reduxjs/toolkit');
-const initialState = { number: 0}
-
+const { configureStore } = require('@reduxjs/toolkit');  // load module in Node.js
+const initialState = { number: 0 }; // default state
+// create identity reducer
 const reducer = (state = initialState, action) => {
-    return state;
+  return state;
 }
-
-const store = configureStore({reducer: reducer});
+// create redux store # run
+const store = configureStore({ reducer: reducer });
 console.log(store.getState());
