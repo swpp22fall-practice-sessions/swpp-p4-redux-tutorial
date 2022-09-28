@@ -5,12 +5,7 @@ import "./TodoDetail.css";
 import { AppDispatch } from "../../store";
 import { selectTodo, todoActions } from "../../store/slices/todo";
 
-type Props = {
-  title: string;
-  content: string;
-};
-
-const TodoDetail = (props: Props) => {
+const TodoDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch<AppDispatch>();
   const todoState = useSelector(selectTodo);
