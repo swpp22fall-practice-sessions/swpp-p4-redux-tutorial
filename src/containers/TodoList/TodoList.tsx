@@ -4,7 +4,7 @@ import Todo from "../../components/Todo/Todo";
 // import TodoDetail from "../../components/TodoDetail/TodoDetail";
 import "./TodoList.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { selectTodo, todoActions, fetchTodos } from '../../store/slices/todo';
+import { selectTodo, todoActions, fetchTodos, deleteTodo, toggleTodo } from '../../store/slices/todo';
 import axios from 'axios';
 import { AppDispatch } from '../../store/index';
 
@@ -25,8 +25,6 @@ export default function TodoList(props: IProps) {
     dispatch(fetchTodos())
   },[])
 
-  console.log(">>>>>>>>>>>>>>>")
-  console.log(todoState)
 
   // const [todos, setTodos] = useState<TodoType[]>([
   //   { id: 1, title: "SWPP", content: "take swpp class", done: true },
@@ -49,8 +47,8 @@ export default function TodoList(props: IProps) {
               title={td.title}
               done={td.done}
               clickDetail = {() => clickTodoHandler(td)}
-              clickDone = {() => dispatch(todoActions.toggleDone({targetId: td.id}))}
-              clickDelete = {() => dispatch(todoActions.deleteTodo({targetId: td.id}))}
+              clickDone = {() => dispatch(toggleTodo(td.id))}
+              clickDelete = {() => dispatch(deleteTodo(td.id))}
             />
           );
         })}
