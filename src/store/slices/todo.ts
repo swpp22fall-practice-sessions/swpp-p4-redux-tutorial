@@ -33,7 +33,15 @@ export const todoSlice = createSlice({
     addTodo: (
       state,
       action: PayloadAction<{ title: string; content: string }>
-    ) => {},
+    ) => {
+      const newTodo = {
+        id: state.todos[state.todos.length - 1].id + 1, // temporary
+        title: action.payload.title,
+        content: action.payload.content,
+        done: false,
+      };
+      state.todos.push(newTodo);
+    },
   },
 });
 export const todoActions = todoSlice.actions;
