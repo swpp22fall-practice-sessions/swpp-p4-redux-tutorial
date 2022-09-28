@@ -4,6 +4,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import NewTodo from "./containers/TodoList/NewTodo/NewTodo";
 import TodoDetail from "./components/TodoDetail/TodoDetail";
 
+
+import React from "react";
+
+
 function App() {
   return (
     <div className="App">
@@ -21,6 +25,9 @@ function App() {
 }
 
 export default App;
+
+
+
 
 <div className="TodoList"></div>;
 /* actually, it uses className, not class to avoid collision btw JS class
