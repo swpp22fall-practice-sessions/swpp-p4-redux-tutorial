@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
+import { selectTodo } from "../../store/slices/todo";
 import "./TodoList.css";
 
 interface IProps {
@@ -14,11 +16,8 @@ export default function TodoList(props: IProps) {
   const { title } = props;
   const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
 
-  const [todos, setTodos] = useState<TodoType[]>([
-    { id: 1, title: "SWPP", content: "take swpp class", done: true },
-    { id: 2, title: "Movie", content: "watch movie", done: false },
-    { id: 3, title: "Dinner", content: "eat dinner", done: false },
-  ]);
+  const todoState = useSelector(selectTodo);
+  const dispatch = useDispatch();
 
   const clickTodoHandler = (td: TodoType) => {
     if (selectedTodo === td) {
@@ -38,7 +37,7 @@ export default function TodoList(props: IProps) {
     <div className="TodoList">
       <div className="title">{title}</div>
       <div className="todos">
-        {todos.map((td) => {
+        {todoState.todos.map((td) => {
           return (
             <Todo
               key={`${td.id}_todo`}
@@ -49,7 +48,7 @@ export default function TodoList(props: IProps) {
           );
         })}
         {todoDetail}
-        <NavLink to="/new-todo" >New Todo</NavLink>
+        <NavLink to="/new-todo">New Todo</NavLink>
       </div>
     </div>
   );
