@@ -65,6 +65,9 @@ export const todoSlice = createSlice({
     builder.addCase(fetchTodos.fulfilled, (state, action) => {
       state.todos = action.payload;
     });
+    builder.addCase(postTodo.rejected, (_state, action) => {
+      console.error(action.error);
+    });
   },
 });
 

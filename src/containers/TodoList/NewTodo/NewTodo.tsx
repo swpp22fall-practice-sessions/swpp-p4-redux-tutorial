@@ -20,10 +20,14 @@ export default function NewTodo() {
   //   navigate('/todos')
   // };
 
-  const postTodoHandler = () => {
+  const postTodoHandler = async () => {
     const data = { title: title, content: content };
-    dispatch(postTodo(data));
-    setSubmitted(true);
+    const result = await dispatch(postTodo(data));
+    if (result.payload) {
+      setSubmitted(true);
+    } else {
+      alert("Error on post Todo");
+    }
   };
 
   if (submitted) {
@@ -44,7 +48,7 @@ export default function NewTodo() {
           value={content}
           onChange={(event) => setContent(event.target.value)}
         />
-        <button onClick={() => postTodoHandler()}>Submit</button>
+        <button onClick={postTodoHandler}>Submit</button>
       </div>
     );
   }
