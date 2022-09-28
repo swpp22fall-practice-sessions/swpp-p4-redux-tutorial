@@ -2,8 +2,10 @@ import "./Todo.css";
 
 interface IProps {
   title: string;
-  clicked?: React.MouseEventHandler<HTMLDivElement>; // Defined by React
-  done: boolean;
+  clickDetail?: React.MouseEventHandler<HTMLDivElement>; // Defined by React
+  clickDone?: () => void;
+  clickDelete?: () => void;
+  done: boolean;  
 }
 
 const Todo = (props: IProps) => {
