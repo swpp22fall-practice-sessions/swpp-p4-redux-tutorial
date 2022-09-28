@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import NewTodo from "./containers/TodoList/NewTodo/NewTodo";
 import TodoDetail from "./components/TodoDetail/TodoDetail";
 
+
 function App() {
   return (
     <div className="App">
@@ -19,12 +20,13 @@ function App() {
     </div>
   );
 }
+//<Route path="/todos/:id" element={<TodoDetail />} /> 
 
 export default App;
 
 <div className="TodoList"></div>;
 /* actually, it uses className, not class to avoid collision btw JS class
- * this syntax is compiled to React.createElement(‘div’, {className: ‘TodoList’})
+ * this syntax is compiled to React.createElement(??�div???, {className: ??�TodoList???})
  * by React Transpiler.
  * );
  */
