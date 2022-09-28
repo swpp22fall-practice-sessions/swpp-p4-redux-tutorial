@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./TodoList.css";
 import Todo from "../../components/Todo/Todo";
-import { selectTodo, todoActions } from "../../store/slices/todo";
+import { fetchTodos, selectTodo, todoActions } from "../../store/slices/todo";
+import { AppDispatch } from "../../store";
 
 interface IProps {
   title: string;
@@ -15,11 +17,17 @@ export default function TodoList(props: IProps) {
   const { title } = props;
 
   const todoState = useSelector(selectTodo);
-  const dispatch = useDispatch();
 
   const clickTodoHandler = (td: TodoType) => {
     navigate("/todos/" + td.id);
   };
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchTodos());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="TodoList">
