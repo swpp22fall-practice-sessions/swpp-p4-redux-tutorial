@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import "./TodoList.css";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
-import { selectTodo } from "../../store/slices/todo";
-import "./TodoList.css";
+import { selectTodo, todoActions } from "../../store/slices/todo";
 
 interface IProps {
   title: string;
@@ -40,10 +40,15 @@ export default function TodoList(props: IProps) {
         {todoState.todos.map((td) => {
           return (
             <Todo
-              key={`${td.id}_todo`}
               title={td.title}
               done={td.done}
-              clicked={() => clickTodoHandler(td)}
+              clickDetail={() => clickTodoHandler(td)}
+              clickDone={() =>
+                dispatch(todoActions.toggleDone({ targetId: td.id }))
+              }
+              clickDelete={() =>
+                dispatch(todoActions.deleteTodo({ targetId: td.id }))
+              }
             />
           );
         })}
