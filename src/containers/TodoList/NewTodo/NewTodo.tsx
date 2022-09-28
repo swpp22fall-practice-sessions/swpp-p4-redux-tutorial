@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { postTodo, todoActions } from "../../../store/slices/todo";
 // import { useNavigate } from "react-router-dom";
 import "./NewTodo.css";
+import { AppDispatch } from "../../../store";
 
 export default function NewTodo() {
   const [title, setTitle] = useState<string>("");
@@ -16,10 +19,16 @@ export default function NewTodo() {
   //   navigate('/todos')
   // };
 
-  const postTodoHandler = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const postTodoHandler = async () => {
     const data = { title: title, content: content };
-    alert("Submitted\n" + data.title + "\n" + data.content);
-    setSubmitted(true);
+    const result = await dispatch(postTodo(data));
+    if (result.type === `${postTodo.typePrefix}/fulfilled`) {
+      setSubmitted(true);
+    } else {
+      alert("Error on post Todo");
+    }
   };
 
   if (submitted) {
