@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./TodoList.css";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
@@ -13,6 +13,7 @@ interface IProps {
 type TodoType = { id: number; title: string; content: string; done: boolean };
 
 export default function TodoList(props: IProps) {
+  const navigate = useNavigate();
   const { title } = props;
   const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
 
@@ -20,11 +21,7 @@ export default function TodoList(props: IProps) {
   const dispatch = useDispatch();
 
   const clickTodoHandler = (td: TodoType) => {
-    if (selectedTodo === td) {
-      setSelectedTodo(null);
-    } else {
-      setSelectedTodo(td);
-    }
+    navigate("/todos/" + td.id);
   };
 
   const todoDetail = useMemo(() => {
