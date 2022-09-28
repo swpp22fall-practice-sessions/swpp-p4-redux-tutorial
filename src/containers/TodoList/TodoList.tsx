@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./TodoList.css";
 import Todo from "../../components/Todo/Todo";
-import { fetchTodos, selectTodo, todoActions } from "../../store/slices/todo";
+import {
+  deleteTodo,
+  fetchTodos,
+  selectTodo,
+  todoActions,
+  toggleDone,
+} from "../../store/slices/todo";
 import { AppDispatch } from "../../store";
 
 interface IProps {
@@ -40,12 +46,8 @@ export default function TodoList(props: IProps) {
               title={td.title}
               done={td.done}
               clickDetail={() => clickTodoHandler(td)}
-              clickDone={() =>
-                dispatch(todoActions.toggleDone({ targetId: td.id }))
-              }
-              clickDelete={() =>
-                dispatch(todoActions.deleteTodo({ targetId: td.id }))
-              }
+              clickDone={() => dispatch(toggleDone(td.id))}
+              clickDelete={() => dispatch(deleteTodo(td.id))}
             />
           );
         })}

@@ -87,4 +87,20 @@ export const postTodo = createAsyncThunk(
   }
 );
 
+export const deleteTodo = createAsyncThunk(
+  "todo/deleteTodo",
+  async (id: TodoType["id"], { dispatch }) => {
+    await axios.delete(`/api/todo/${id}/`);
+    dispatch(todoActions.deleteTodo({ targetId: id }));
+  }
+);
+
+export const toggleDone = createAsyncThunk(
+  "todo/toggleDone",
+  async (id: TodoType["id"], { dispatch }) => {
+    await axios.put(`/api/todo/${id}/`);
+    dispatch(todoActions.toggleDone({ targetId: id }));
+  }
+);
+
 export default todoSlice.reducer;
