@@ -44,6 +44,7 @@ export const postTodo = createAsyncThunk(
     async (td: Pick<TodoType, "title" | "content">, { dispatch }) => {
         const response = await axios.post("/api/todo/", td);
         dispatch(todoActions.addTodo(response.data));
+        return response.data;
     }
 );
 

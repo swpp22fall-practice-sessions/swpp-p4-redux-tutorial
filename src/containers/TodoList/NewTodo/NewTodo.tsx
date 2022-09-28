@@ -22,8 +22,9 @@ export default function NewTodo() {
 
   const postTodoHandler = async () => {
     const data = { title: title, content: content };
-    dispatch(postTodo(data));
-    setSubmitted(true);
+    const response = await dispatch(postTodo(data));
+    if(response.payload) setSubmitted(true);
+    else alert("Error on post Todo");
   };
 
   if (submitted) {
