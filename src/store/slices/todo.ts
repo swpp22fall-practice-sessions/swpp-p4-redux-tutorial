@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 import { RootState } from "..";
 
 export interface TodoType {
@@ -14,11 +15,7 @@ export interface TodoState {
 }
 
 const initialState: TodoState = {
-  todos: [
-    { id: 1, title: "SWPP", content: "take swpp class", done: true },
-    { id: 2, title: "Movie", content: "watch movie", done: false },
-    { id: 3, title: "Dinner", content: "eat dinner", done: false },
-  ],
+  todos: [],
   selectedTodo: null,
 };
 
@@ -53,6 +50,42 @@ export const todoSlice = createSlice({
       state.todos.push(newTodo);
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchTodos.fulfilled, (state, action) => {
+      state.todos = action.payload;
+    });
+    builder.addCase(fetchTodo.fulfilled, (state, action) => {
+      state.selectedTodo = action.payload;
+    });
+  },
+});
+
+export const fetchTodos = createAsyncThunk("todo/fetchTodos", async () => {
+  const response = await axios.get<TodoType[]>("/api/todo/");
+  return response.data;
+});
+
+export const fetchTodo = createAsyncThunk("todo/fetchTodo", async (id: TodoType["id"], { dispatch }) => {
+  const response = await axios.get<TodoType>(`/api/todo/${id}/`);
+  return response.data ?? null;
+});
+
+export const postTodo = createAsyncThunk(
+  "todo/postTodo",
+  async (td: Pick<TodoType, "title" | "content">, { dispatch }) => {
+    const response = await axios.post<TodoType>("/api/todo/", td);
+    dispatch(todoActions.addTodo(response.data));
+  }
+);
+
+export const deleteTodo = createAsyncThunk("todo/deleteTodo", async (id: TodoType["id"], { dispatch }) => {
+  await axios.delete(`/api/todo/${id}/`);
+  dispatch(todoActions.deleteTodo({ targetId: id }));
+});
+
+export const toggleDone = createAsyncThunk("todo/toggleDone", async (id: TodoType["id"], { dispatch }) => {
+  await axios.put(`/api/todo/${id}/`);
+  dispatch(todoActions.toggleDone({ targetId: id }));
 });
 
 export const todoActions = todoSlice.actions;

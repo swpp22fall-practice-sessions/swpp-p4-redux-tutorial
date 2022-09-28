@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { todoActions } from "../../../store/slices/todo";
+import { AppDispatch } from "../../../store";
+import { postTodo } from "../../../store/slices/todo";
 import "./NewTodo.css";
 
 export default function NewTodo() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const postTodoHandler = () => {
     const data = { title: title, content: content };
-    dispatch(todoActions.addTodo(data));
+    dispatch(postTodo(data));
     navigate("/todos");
   };
 
