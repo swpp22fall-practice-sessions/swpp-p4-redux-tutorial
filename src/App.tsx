@@ -3,6 +3,7 @@ import TodoList from "./containers/TodoList/TodoList"; // can omit.js
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import NewTodo from "./containers/TodoList/NewTodo/NewTodo";
 import TodoDetail from "./components/TodoDetail/TodoDetail";
+import React from "react";
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/todos" element={<TodoList title={"My TODOs!"} />} />
-          <Route path="/todos/:id" element={<TodoDetail />} />
+          <Route path="/todos/:id" element={<TodoDetail title={""} content={""} />} />
           <Route path="/new-todo" element={<NewTodo />} />
           <Route path="/" element={<Navigate replace to={"/todos"} />} />
           <Route path="*" element={<h1>Not Found</h1>} />

@@ -1,8 +1,11 @@
+import React from "react";
 import { useMemo, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
 import "./TodoList.css";
+import { useDispatch, useSelector } from "react-redux";
+import { selectTodo, todoActions } from "../../store/slices/todo";
 
 interface IProps {
   title: string;
@@ -13,6 +16,8 @@ type TodoType = { id: number; title: string; content: string; done: boolean };
 export default function TodoList(props: IProps) {
   const { title } = props;
   const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
+  const todoState = useSelector(selectTodo);
+  const dispatch = useDispatch();
 
   const [todos, setTodos] = useState<TodoType[]>([
     { id: 1, title: "SWPP", content: "take swpp class", done: true },
@@ -38,13 +43,14 @@ export default function TodoList(props: IProps) {
     <div className="TodoList">
       <div className="title">{title}</div>
       <div className="todos">
-        {todos.map((td) => {
+        {todoState.todos.map((td) => {
           return (
             <Todo
-              key={`${td.id}_todo`}
               title={td.title}
               done={td.done}
-              clicked={() => clickTodoHandler(td)}
+              clickDetail={() => clickTodoHandler(td)}
+              clickDone={() => dispatch(todoActions.toggleDone({targetId: td.id}))}
+              clickDelete={() => dispatch(todoActions.deleteTodo({targetId: td.id}))}
             />
           );
         })}

@@ -1,12 +1,16 @@
+import React from "react";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { todoActions } from "../../../store/slices/todo";
 import "./NewTodo.css";
 
 export default function NewTodo() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   // const navigate = useNavigate()
   // const postTodoHandler = () => {
@@ -18,9 +22,9 @@ export default function NewTodo() {
 
   const postTodoHandler = () => {
     const data = { title: title, content: content };
-    alert("Submitted\n" + data.title + "\n" + data.content);
+    dispatch(todoActions.addTodo(data))
     setSubmitted(true);
-  };
+ };
 
   if (submitted) {
     return <Navigate to="/todos" />;
