@@ -1,24 +1,21 @@
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-import "./NewTodo.css";
+import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { todoActions } from '../../../store/slices/todo';
+import { useNavigate } from "react-router-dom";
+import './NewTodo.css';
+import { AppDispatch } from '../../../store';
+import { postTodo } from '../../../store/slices/todo';
 
 export default function NewTodo() {
-  const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [title, setTitle] = useState<string>('');
+  const [content, setContent] = useState<string>('');
   const [submitted, setSubmitted] = useState<boolean>(false);
-
-  // const navigate = useNavigate()
-  // const postTodoHandler = () => {
-  //   const data = { title: title, content: content };
-  //   alert("Submitted\n" + data.title + "\n" + data.content);
-  //   setSubmitted(true);
-  //   navigate('/todos')
-  // };
+  const dispatch = useDispatch<AppDispatch>();
 
   const postTodoHandler = () => {
     const data = { title: title, content: content };
-    alert("Submitted\n" + data.title + "\n" + data.content);
+    dispatch(postTodo(data));
     setSubmitted(true);
   };
 
