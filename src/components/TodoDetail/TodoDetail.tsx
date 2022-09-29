@@ -1,4 +1,17 @@
-import "./TodoDetail.css";
+import React from "react";
+import "./TodoDetail.css"; 
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { selectTodo, todoActions } from "../../store/slices/todo";
+
+ 
+const { id } = useParams();
+const dispatch = useDispatch();
+const todoState = useSelector(selectTodo);
+useEffect(() => {
+  dispatch(todoActions.getTodo({ targetId: Number(id) }));
+}, [dispatch, id]);
 
 type Props = {
   title: string;

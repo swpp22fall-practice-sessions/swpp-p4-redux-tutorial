@@ -1,11 +1,16 @@
 import React from "react";
 import { useMemo, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
 import "./TodoList.css";
 import { useDispatch, useSelector } from "react-redux";
 import { selectTodo, todoActions } from "../../store/slices/todo";
+
+const navigate = useNavigate();
+const clickTodoHandler = (td: TodoType) => {
+  navigate('/todos/' + td.id);
+};
 
 interface IProps {
   title: string;
