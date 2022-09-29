@@ -100,7 +100,9 @@ export const todoSlice = createSlice({
       // Add user to the state array
       state.todos = action.payload;
     });
-
+    builder.addCase(fetchTodo.fulfilled, (state, action) => {
+      state.selectedTodo = action.payload;
+    });
     builder.addCase(postTodo.rejected, (_state, action) => {
       console.error(action.error);
     });
