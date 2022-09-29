@@ -1,14 +1,11 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "..";
+import axios from 'axios';
 
 export interface TodoType { id: number; title: string; content: string; done: boolean; }
 export interface TodoState { todos: TodoType[]; selectedTodo: TodoType | null; }
 const initialState: TodoState = {
-  todos: [
-  { id: 1, title: "SWPP", content: "take swpp class", done: true },
-  { id: 2, title: "Movie", content: "watch movie", done: false },
-  { id: 3, title: "Dinner", content: "eat dinner", done: false },
-  ], selectedTodo: null,
+  todos: [], selectedTodo: null,
 }; 
 
 export const todoSlice = createSlice({
@@ -45,7 +42,57 @@ export const todoSlice = createSlice({
       state.todos = deleted;
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchTodos.fulfilled, (state, action) => {
+      // Add user to the state array
+      state.todos = action.payload;
+    });
+    builder.addCase(fetchTodo.fulfilled,
+      (state, action) => {
+      state.selectedTodo = action.payload;
+    })
+    builder.addCase(postTodo.rejected, (_state, action) =>{
+      console.error(action.error); // postTodo.pending 이면 로딩 중에 다른 작업 가능
+    });
+  }
 });
+
+export const fetchTodos = createAsyncThunk("todo/fetchTodos", async () => {
+  const response = await axios.get<TodoType[]>("/api/todo/");
+  return response.data;
+});
+
+export const fetchTodo = createAsyncThunk(
+  "todo/fetchTodo",
+  async (id: TodoType["id"], { dispatch }) => {
+    const response = await axios.get(`/api/todo/${id}/`);
+    return response.data ?? null;
+  }
+);
+
+
+export const postTodo = createAsyncThunk(
+  "todo/postTodo",
+  async( td: Pick<TodoType, "title" | "content">, {dispatch}) => {
+    const response = await axios.post("/api/todo/", td);
+    dispatch(todoActions.addTodo(response.data));
+  }
+);
+export const deleteTodo = createAsyncThunk(
+  "todo/deleteTodo",
+  async (id: TodoType["id"], { dispatch }) => {
+    await axios.delete(`/api/todo/${id}/`);
+  dispatch(todoActions.deleteTodo({ targetId: id }));
+}
+);
+export const toggleDone = createAsyncThunk(
+  "todo/toggleDone",
+  async (id: TodoType["id"], { dispatch }) => {
+    await axios.put(`/api/todo/${id}/`);
+    dispatch(todoActions.toggleDone({ targetId: id }));
+  }
+);
+
 export const todoActions = todoSlice.actions;
 export const selectTodo = (state: RootState) => state.todo;
 export default todoSlice.reducer;

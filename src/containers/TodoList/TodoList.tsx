@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
 import "./TodoList.css";
 import { useDispatch, useSelector } from "react-redux";
-import { selectTodo, todoActions } from "../../store/slices/todo";
+import { fetchTodos, selectTodo, todoActions, deleteTodo, toggleDone } from "../../store/slices/todo";
 import { NavLink, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { AppDispatch } from "../../store";
 
 interface IProps {
   title: string;
@@ -16,7 +18,7 @@ export default function TodoList(props: IProps) {
   const { title } = props;
   const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
   const todoState = useSelector(selectTodo);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const [todos, setTodos] = useState<TodoType[]>([
@@ -28,6 +30,20 @@ export default function TodoList(props: IProps) {
   const clickTodoHandler = (td: TodoType) => {
     navigate("/todos/" + td.id)
   }
+  useEffect(()=>{
+    dispatch(fetchTodos());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  
+  useEffect(()=> {
+    axios.get('/api/todo/')
+      .then(result => console.log(result));
+  })
+  // useEffect(() => {
+  //   axios.get('/api/todoerror')
+  //   .then(result => console.log(result))
+  //   .catch(err => console.log(err));
+  // })
 
   // const clickTodoHandler = (td: TodoType) => {
   //   if (selectedTodo === td) {
@@ -53,8 +69,8 @@ export default function TodoList(props: IProps) {
             title={td.title}
             done={td.done}
             clickDetail={() => clickTodoHandler(td)}
-            clickDone={() => dispatch(todoActions.toggleDone({targetId: td.id}))}
-            clickDelete={() => dispatch(todoActions.deleteTodo({targetId: td.id}))}
+            clickDone={() => dispatch(toggleDone(td.id))}
+            clickDelete={() => dispatch(deleteTodo(td.id))}
             />
           );
         })}
