@@ -1,7 +1,7 @@
 {
-  "name": "swpp-p3-react-tutorial",
+  "name": "todo",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "proxy": "http://127.0.0.1:8000",
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.5",
