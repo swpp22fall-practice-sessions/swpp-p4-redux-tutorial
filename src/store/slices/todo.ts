@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
+import axios from 'axios';
 
 export interface TodoType { id: number; title: string; content: string; done: boolean; }
 export interface TodoState { todos: TodoType[]; selectedTodo: TodoType | null; }
@@ -10,6 +11,47 @@ todos: [
  { id: 3, title: "Dinner", content: "eat dinner", done: false },
  ], selectedTodo: null,
 }; // continue
+
+export const fetchTodo = createAsyncThunk( "todo/fetchTodo",
+async (id: TodoType["id"], { dispatch }) => {
+ const response = await axios.get(`/api/todo/${id}/`);
+ return response.data ?? null;
+ }
+);
+
+export const fetchTodos = createAsyncThunk(
+    "todo/fetchTodos",
+    async () => {
+    const response = await
+   axios.get<TodoType[]>("/api/todo/");
+    return response.data;
+    }
+);
+      
+
+export const postTodo = createAsyncThunk(
+    "todo/postTodo",
+    async (td: Pick<TodoType, "title" | "content">, { dispatch }) => {
+     const response = await axios.post("/api/todo/", td);
+     dispatch(todoActions.addTodo(response.data));
+     }
+);
+
+export const deleteTodo = createAsyncThunk(
+    "todo/deleteTodo",
+    async (id: TodoType["id"], { dispatch }) => {
+     await axios.delete(`/api/todo/${id}/`);
+     dispatch(todoActions.deleteTodo({ targetId: id }));
+     }
+);
+    
+export const toggleDone = createAsyncThunk(
+    "todo/toggleDone",
+    async (id: TodoType["id"], { dispatch }) => {
+     await axios.put(`/api/todo/${id}/`);
+     dispatch(todoActions.toggleDone({ targetId: id }));
+     }
+);
 
 export const todoSlice = createSlice({
     name: "todo",
@@ -46,9 +88,25 @@ export const todoSlice = createSlice({
         };
         state.todos.push(newTodo);
      }, 
-    },
+     
+     extraReducers: (builder) => {
+        builder.addCase(fetchTodo.fulfilled,
+        (state, action) => {
+        state.selectedTodo = action.payload;
+        });
+        builder.addCase(fetchTodos.fulfilled, (state, action) => {
+            state.todos = action.payload;
+        });
+        builder.addCase(postTodo.rejected, (_state, action) =>{
+            console.error(action.error);
+        })  
+        },
+       
 });
 
 export const todoActions = todoSlice.actions;
 export const selectTodo = (state: RootState) => state.todo;
 export default todoSlice.reducer;
+
+
+    

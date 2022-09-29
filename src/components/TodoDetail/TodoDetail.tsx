@@ -2,21 +2,21 @@ import "./TodoDetail.css";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { selectTodo, todoActions } from "../../store/slices/todo";
+import { selectTodo, fetchTodo } from "../../store/slices/todo";
+import { AppDispatch } from "../../store";
 
 
-type Props = {
-  title: string;
-  content: string;
-};
 
-const TodoDetail = (props: Props) => {
+const TodoDetail = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const todoState = useSelector(selectTodo);
+  
   useEffect(() => {
-  dispatch(todoActions.getTodo({ targetId: Number(id) }));
-  }, [dispatch, id])
+    dispatch(fetchTodo(Number(id)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
   return (
     <div className="TodoDetail">
       <div className="row">

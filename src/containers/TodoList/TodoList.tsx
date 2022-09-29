@@ -1,10 +1,12 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Todo from "../../components/Todo/Todo";
 import TodoDetail from "../../components/TodoDetail/TodoDetail";
 import "./TodoList.css";
 import { useDispatch, useSelector } from "react-redux";
-import { selectTodo, todoActions } from "../../store/slices/todo";
+import { toggleDone, deleteTodo, fetchTodos, selectTodo, todoActions } from "../../store/slices/todo";
+import axios from 'axios';
+import {AppDispatch} from "../../store/";
 
 interface IProps {
   title: string;
@@ -16,10 +18,15 @@ export default function TodoList(props: IProps) {
   const { title } = props;
   const [selectedTodo, setSelectedTodo] = useState<TodoType | null>(null);
   const todoState = useSelector(selectTodo);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate()
+  
 
-
+  useEffect(() => {
+    dispatch(fetchTodos())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
+   
   const [todos, setTodos] = useState<TodoType[]>([
     { id: 1, title: "SWPP", content: "take swpp class", done: true },
     { id: 2, title: "Movie", content: "watch movie", done: false },
@@ -46,8 +53,8 @@ export default function TodoList(props: IProps) {
               title={td.title}
               done={td.done}
               clickDetail={() => clickTodoHandler(td)}
-              clickDone={() => dispatch(todoActions.toggleDone({targetId: td.id}))}
-              clickDelete={() => dispatch(todoActions.deleteTodo({targetId: td.id}))}
+              clickDone={() => dispatch(toggleDone(td.id))}
+              clickDelete={() => dispatch(deleteTodo(td.id))}
             />
           );
         })}
