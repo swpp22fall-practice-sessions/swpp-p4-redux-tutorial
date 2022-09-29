@@ -35,7 +35,7 @@ export default function TodoList(props: IProps) {
 
   useEffect(() => {
     dispatch(fetchTodos());
-  })
+  }, []);
 
   return (
     <div className="TodoList">

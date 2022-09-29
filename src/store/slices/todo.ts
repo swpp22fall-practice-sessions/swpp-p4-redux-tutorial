@@ -46,10 +46,15 @@ export const todoSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchTodo.fulfilled,
-      (state, action) => {
-        state.selectedTodo = action.payload;
-      });
+    builder.addCase(fetchTodos.fulfilled, (state, action) => {
+      state.todos = action.payload;
+    });
+    builder.addCase(postTodo.rejected, (_state, action) => {
+      console.error(action.error);
+    });
+    builder.addCase(fetchTodo.fulfilled, (state, action) => {
+      state.selectedTodo = action.payload;
+    });
   },
 });
 
@@ -94,5 +99,5 @@ export const toggleDone = createAsyncThunk(
 );
 
 export const todoActions = todoSlice.actions;
-export const selectTodo = (state: RootState) => state;
+export const selectTodo = (state: RootState) => state.todo;
 export default todoSlice.reducer;
